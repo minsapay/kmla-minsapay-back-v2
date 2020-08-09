@@ -20,31 +20,40 @@ exports.getData = (req, res, next) => {
 
 exports.recordPayment = (req, res, next) => {
   Booth.findById(req.body._id).then((booth) => {
-    const refund = req.body.refund || booth.admin;
-    const price = refund ? req.body.price : -req.body.price;
+    // // 관리자(금융정보부)이면 환불이 가상의 돈을 깎는 거임
+    const refund = booth.isAdmin ? !req.body.refund : req.body.refund;
 
-    const payment = {
-      booth: booth.name,
-      item: req.body.item,
-      price,
-    };
+    // 학생 기준으로 돈이 얼마나 청구되는지
+    const price = refund ? -req.body.price : req.body.price;
 
-    booth.income -= price;
-    booth.save();
+    Student.findOne({ id: req.body.id })
+      .then((student) => {
+        const boothHistory = {
+          student: student.name,
+          item: req.body.item,
+          price: price,
+        };
 
-    Student.update(
-      { id: req.body.id },
-      { $push: { history: payment }, $inc: { leftover: price } }
-    )
-      .then((result) => {
-        if (result) {
-          res.status(200).json({
-            message: 'Recording Successful!',
-            updatedIncome: booth.income,
-          });
-        } else {
-          res.status(404).json({ message: 'failed!' });
-        }
+        const studentHistory = {
+          booth: booth.name,
+          item: req.body.item,
+          price: -price,
+        };
+
+        booth.income += price;
+        student.leftover -= price;
+
+        booth.history.push(boothHistory);
+        student.history.push(studentHistory);
+
+        booth.save();
+        student.save();
+
+        res.status(200).json({
+          message: 'Recording Successful!',
+          updatedIncome: price,
+          updatedHistory: boothHistory,
+        });
       })
       .catch((err) => {
         res.status(500).json({
