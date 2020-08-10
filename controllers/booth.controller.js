@@ -51,8 +51,8 @@ exports.recordPayment = (req, res, next) => {
 
         res.status(200).json({
           message: 'Recording Successful!',
-          updatedIncome: price,
-          updatedHistory: boothHistory,
+          updatedIncome: booth.income,
+          updatedHistory: booth.history,
         });
       })
       .catch((err) => {
