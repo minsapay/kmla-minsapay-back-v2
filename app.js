@@ -5,6 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const cors = require('cors');
+const path = require('path');
 
 const uri = process.env.MONGODB_URI;
 
@@ -18,10 +19,20 @@ let studentRouter = require('./routes/student.routes');
 
 const app = express();
 
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET,POST,OPTIONS',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(
+  express.static(path.join(__dirname, './static'), { dotfiles: 'allow' })
+);
 
 app.use('/booth', boothRouter);
 app.use('/student', studentRouter);
