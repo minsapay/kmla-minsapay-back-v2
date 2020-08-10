@@ -87,15 +87,12 @@ switch (process.env.NODE_ENV) {
       'utf8'
     );
     const certificate = fs.readFileSync(
-      process.env.SSL_DIR + 'cert.pem',
+      process.env.SSL_DIR + 'fullchain.pem',
       'utf8'
     );
-    const chain = fs.readFileSync(process.env.SSL_DIR + 'chain.pem', 'utf8');
-
     const credentials = {
       key: privateKey,
       cert: certificate,
-      ca: chain,
     };
 
     /**
