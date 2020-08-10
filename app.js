@@ -29,9 +29,6 @@ app.use(
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(
-  express.static(path.join(__dirname, './static'), { dotfiles: 'allow' })
-);
 
 app.use('/booth', boothRouter);
 app.use('/student', studentRouter);
