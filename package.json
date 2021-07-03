@@ -1,9 +1,9 @@
 {
-  "name": "haha",
-  "version": "0.0.0",
+  "name": "minsapay-backend-v2",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

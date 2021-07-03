@@ -115,3 +115,7 @@ dist
 
 # dummy data
 dummy.*.json
+
+# booth and student data
+booths.json
+students.json
